@@ -43,7 +43,11 @@ async function DeleteAnimal(req, res) {
   if (!idValido(req, res)) return;
 
   try {
-    responderEscrita(res, await mdlAnimais.DeleteAnimal(Number(req.params.id)));
+    const { bloqueado, linhasAfetadas } = await mdlAnimais.DeleteAnimal(Number(req.params.id));
+    if (bloqueado) {
+      return res.status(409).json({ status: 'Este animal tem alocações vinculadas. Remova ou edite essas alocações primeiro.' });
+    }
+    responderEscrita(res, linhasAfetadas);
   } catch (erro) {
     responderErro(res, erro);
   }

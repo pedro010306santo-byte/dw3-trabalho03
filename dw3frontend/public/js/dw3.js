@@ -32,6 +32,9 @@ async function requisitar(rota, method = 'GET', dados) {
     throw new Error('Login recusado. Confira o usuário e a senha.');
   }
   if (!resposta.ok || !resultado || (rota !== '/Login' && resultado.status !== 'ok')) {
+    if (resposta.status === 409 && typeof resultado?.status === 'string') {
+      throw new Error(resultado.status);
+    }
     throw new Error('A API não concluiu a operação.');
   }
   return resultado;

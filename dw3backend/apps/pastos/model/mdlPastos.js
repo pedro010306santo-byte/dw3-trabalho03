@@ -34,10 +34,20 @@ async function UpdatePasto(id, registro) {
 
 async function DeletePasto(id) {
   const resultado = await db.query(
-    'UPDATE pasto SET removido = true WHERE pastoid = $1 AND removido = false',
+    `WITH vinculo AS (
+       SELECT 1 FROM piquete WHERE pastoidfk = $1 AND removido = false
+     ), exclusao AS (
+       UPDATE pasto SET removido = true
+        WHERE pastoid = $1 AND removido = false
+          AND NOT EXISTS (SELECT 1 FROM vinculo)
+       RETURNING 1
+     )
+     SELECT (SELECT count(*)::integer FROM exclusao) AS "linhasAfetadas",
+            EXISTS (SELECT 1 FROM vinculo)
+              AND EXISTS (SELECT 1 FROM pasto WHERE pastoid = $1 AND removido = false) AS bloqueado`,
     [id]
   );
-  return resultado.rowCount;
+  return resultado.rows[0];
 }
 
 module.exports = {

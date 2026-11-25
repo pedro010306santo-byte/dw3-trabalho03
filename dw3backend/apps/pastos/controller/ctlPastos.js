@@ -43,7 +43,11 @@ async function DeletePasto(req, res) {
   if (!idValido(req, res)) return;
 
   try {
-    responderEscrita(res, await mdlPastos.DeletePasto(Number(req.params.id)));
+    const { bloqueado, linhasAfetadas } = await mdlPastos.DeletePasto(Number(req.params.id));
+    if (bloqueado) {
+      return res.status(409).json({ status: 'Este pasto tem piquetes vinculados. Remova ou transfira esses piquetes primeiro.' });
+    }
+    responderEscrita(res, linhasAfetadas);
   } catch (erro) {
     responderErro(res, erro);
   }

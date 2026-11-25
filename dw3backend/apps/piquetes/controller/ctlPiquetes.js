@@ -53,7 +53,11 @@ async function DeletePiquete(req, res) {
   if (!idValido(req, res)) return;
 
   try {
-    responderEscrita(res, await mdlPiquetes.DeletePiquete(Number(req.params.id)));
+    const { bloqueado, linhasAfetadas } = await mdlPiquetes.DeletePiquete(Number(req.params.id));
+    if (bloqueado) {
+      return res.status(409).json({ status: 'Este piquete tem alocações vinculadas. Remova ou edite essas alocações primeiro.' });
+    }
+    responderEscrita(res, linhasAfetadas);
   } catch (erro) {
     responderErro(res, erro);
   }
