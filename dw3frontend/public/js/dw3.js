@@ -128,7 +128,7 @@ const campos = {
   pastos: ['pastoid', 'descricao', 'areatotal'],
   piquetes: ['piqueteid', 'descricao', 'latitude', 'longitude', 'pastoidfk', 'areausada'],
   animais: ['animalid', 'nome', 'datanasc'],
-  alocados: ['alocadoid', 'animalidifk', 'piqueteidfk', 'datainicio', 'datafinal'],
+  alocados: ['alocadoid', 'animalnome', 'piquetenome', 'datainicio', 'datafinal'],
 };
 
 const relacionamentos = {
@@ -241,7 +241,11 @@ function configurarEnvio(formulario, acao) {
     botao.disabled = true;
     mensagens.hidden = true;
     try {
-      await acao(Object.fromEntries(new FormData(formulario)));
+      const camposEnviados = new FormData(formulario);
+      const dados = Object.fromEntries(camposEnviados);
+      const selecaoMultipla = formulario.querySelector('select[multiple]');
+      if (selecaoMultipla) dados[selecaoMultipla.name] = camposEnviados.getAll(selecaoMultipla.name);
+      await acao(dados);
     } catch (erro) {
       mostrarErro(erro);
     } finally {
@@ -277,7 +281,7 @@ async function carregarFormulario() {
     if (oper === 'Cr') resposta = await api.inserir(dadosFormulario);
     if (oper === 'Up') resposta = await api.atualizar(id, dadosFormulario);
     if (oper === 'De') resposta = await api.excluir(id);
-    if (Number(resposta.linhasAfetadas) !== 1) {
+    if (!(Number(resposta.linhasAfetadas) > 0)) {
       throw new Error('Nenhum registro foi alterado.');
     }
     window.location.assign('/' + modulo);

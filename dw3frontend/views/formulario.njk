@@ -20,12 +20,14 @@
     <form id="crud-form" method="post"{% if oper == 'De' %} aria-describedby="aviso-exclusao"{% endif %}>
       <div class="row g-3">
         {% for campo in modulo.campos %}
+          {% set variosAnimais = modulo.slug == 'alocados' and oper == 'Cr' and campo.nome == 'animalidifk' %}
           <div class="col-12 col-md-6">
-            <label class="form-label" for="{{ campo.nome }}">{{ campo.rotulo }}{% if campo.obrigatorio == false or campo.required == false %} <span class="text-body-secondary">(opcional)</span>{% endif %}</label>
+            <label class="form-label" for="{{ campo.nome }}">{% if variosAnimais %}Animais{% else %}{{ campo.rotulo }}{% endif %}{% if campo.obrigatorio == false or campo.required == false %} <span class="text-body-secondary">(opcional)</span>{% endif %}</label>
             {% if campo.tipo == 'select' or campo.opcoes %}
-              <select class="form-select" id="{{ campo.nome }}" name="{{ campo.nome }}"{% if campo.obrigatorio != false and campo.required != false %} required{% endif %}>
-                <option value="">Selecione</option>
+              <select class="form-select" id="{{ campo.nome }}" name="{{ campo.nome }}"{% if variosAnimais %} multiple size="5" aria-describedby="ajuda-animais"{% endif %}{% if campo.obrigatorio != false and campo.required != false %} required{% endif %}>
+                {% if not variosAnimais %}<option value="">Selecione</option>{% endif %}
               </select>
+              {% if variosAnimais %}<div class="form-text" id="ajuda-animais">Segure Ctrl (ou ⌘ no Mac) para selecionar vários animais para o mesmo piquete e período.</div>{% endif %}
             {% else %}
               <input class="form-control" id="{{ campo.nome }}" name="{{ campo.nome }}" type="{{ campo.tipo or 'text' }}"{% if campo.step != null %} step="{{ campo.step }}"{% endif %}{% if campo.min != null %} min="{{ campo.min }}"{% endif %}{% if campo.max != null %} max="{{ campo.max }}"{% endif %}{% if campo.obrigatorio != false and campo.required != false %} required{% endif %}>
             {% endif %}

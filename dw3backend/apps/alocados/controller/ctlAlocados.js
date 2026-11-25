@@ -22,8 +22,17 @@ async function GetAlocadoByID(req, res) {
 }
 
 async function InsertAlocado(req, res) {
+  const registro = req.body || {};
+  const selecionados = [registro.animalidifk].flat();
+  const animais = [...new Set(selecionados.map(id => {
+    return typeof id === 'number' || (typeof id === 'string' && /^\d+$/.test(id))
+      ? Number(id) : NaN;
+  }))];
+  if (!animais.length || animais.some(id => !Number.isInteger(id) || id < 1 || id > 2147483647)) {
+    return res.status(400).json({ status: 'Selecione pelo menos um animal válido.' });
+  }
   try {
-    responderEscrita(res, await mdlAlocados.InsertAlocado(req.body || {}));
+    responderEscrita(res, await mdlAlocados.InsertAlocado(registro, animais));
   } catch (erro) {
     responderErro(res, erro);
   }
