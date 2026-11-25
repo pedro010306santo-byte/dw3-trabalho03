@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "bootstrap": "5.3.3",
+    "express": "5.1.0",
+    "nunjucks": "3.2.4"
+  },
+  "scripts": {
+    "start": "node app.js"
+  },
+  "name": "dw3frontend",
+  "version": "1.0.0",
+  "private": true
+}

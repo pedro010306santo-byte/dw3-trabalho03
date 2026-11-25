@@ -1,0 +1,58 @@
+@servidor = http://localhost:40000
+@username = informe-o-usuario
+@password = informe-a-senha
+
+# Defina o ID do registro retornado na listagem antes de consultar, editar ou remover.
+@id = 1
+
+### Login
+# @name loginAutenticado
+POST {{servidor}}/Login
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}"
+}
+
+### Token da resposta de login
+@accessToken = {{loginAutenticado.response.body.$.token}}
+
+### Verificar proteção da rota (401)
+GET {{servidor}}/getAllAnimais
+
+### Inserir
+POST {{servidor}}/insertAnimal
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "nome": "Mimosa",
+  "datanasc": "2022-05-12"
+}
+
+### Listar
+GET {{servidor}}/getAllAnimais
+Authorization: Bearer {{accessToken}}
+
+### Consultar por ID
+GET {{servidor}}/getAnimalByID/{{id}}
+Authorization: Bearer {{accessToken}}
+
+### Atualizar
+PUT {{servidor}}/updateAnimal/{{id}}
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "nome": "Mimosa 01",
+  "datanasc": "2022-05-12"
+}
+
+### Remover logicamente
+DELETE {{servidor}}/deleteAnimal/{{id}}
+Authorization: Bearer {{accessToken}}
+
+### Confirmar que o registro removido não é retornado (registro vazio)
+GET {{servidor}}/getAnimalByID/{{id}}
+Authorization: Bearer {{accessToken}}

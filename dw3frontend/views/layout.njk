@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ titulo or (modulo.titulo if modulo) or 'Pastejo rotacionado' }} | DW3</title>
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/dw3.js" defer></script>
+</head>
+<body data-servidor-dw3="{{ servidorDw3 }}" data-pagina="{{ pagina }}" data-modulo="{{ modulo.slug }}" data-oper="{{ oper }}" data-id="{{ idRegistro }}">
+  <a class="atalho" href="#conteudo">Ir para o conteúdo</a>
+  {% if pagina != 'login' %}
+    <nav class="navbar navbar-dark app-navbar" aria-label="Menu principal">
+      <div class="container app-nav">
+        <a class="navbar-brand" href="/">Pastejo rotacionado</a>
+        <ul class="navbar-nav flex-row flex-wrap gap-2">
+          {% for item in modulos %}
+            <li class="nav-item">
+              <a class="nav-link{% if modulo.slug == item.slug %} active{% endif %}" href="/{{ item.slug }}"{% if modulo.slug == item.slug %} aria-current="page"{% endif %}>{{ item.titulo }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+        <button class="btn btn-outline-light" type="button" id="logout">Sair</button>
+      </div>
+    </nav>
+  {% endif %}
+  <main id="conteudo" class="container py-4 py-md-5" tabindex="-1">
+    <div id="mensagem" role="alert" hidden></div>
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

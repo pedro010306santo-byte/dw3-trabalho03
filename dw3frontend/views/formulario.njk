@@ -1,0 +1,44 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+{% set acao = 'Incluir' %}
+{% if oper == 'Re' %}{% set acao = 'Consultar' %}
+{% elif oper == 'Up' %}{% set acao = 'Editar' %}
+{% elif oper == 'De' %}{% set acao = 'Remover' %}
+{% endif %}
+
+<header class="mb-4">
+  <a class="voltar" href="/{{ modulo.slug }}">Voltar para {{ modulo.titulo | lower }}</a>
+  <h1 class="mt-2 mb-0">{{ acao }} {{ modulo.singular | lower }}</h1>
+</header>
+
+<section class="card pagina-card">
+  <div class="card-body p-4">
+    {% if oper == 'De' %}
+      <p class="alert alert-warning" id="aviso-exclusao">Confirme se este é o registro que você deseja remover.</p>
+    {% endif %}
+    <form id="crud-form" method="post"{% if oper == 'De' %} aria-describedby="aviso-exclusao"{% endif %}>
+      <div class="row g-3">
+        {% for campo in modulo.campos %}
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="{{ campo.nome }}">{{ campo.rotulo }}{% if campo.obrigatorio == false or campo.required == false %} <span class="text-body-secondary">(opcional)</span>{% endif %}</label>
+            {% if campo.tipo == 'select' or campo.opcoes %}
+              <select class="form-select" id="{{ campo.nome }}" name="{{ campo.nome }}"{% if campo.obrigatorio != false and campo.required != false %} required{% endif %}>
+                <option value="">Selecione</option>
+              </select>
+            {% else %}
+              <input class="form-control" id="{{ campo.nome }}" name="{{ campo.nome }}" type="{{ campo.tipo or 'text' }}"{% if campo.step != null %} step="{{ campo.step }}"{% endif %}{% if campo.min != null %} min="{{ campo.min }}"{% endif %}{% if campo.max != null %} max="{{ campo.max }}"{% endif %}{% if campo.obrigatorio != false and campo.required != false %} required{% endif %}>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+      <div class="d-flex flex-wrap gap-2 mt-4">
+        {% if oper != 'Re' %}
+          <button class="btn {% if oper == 'De' %}btn-danger{% else %}btn-primary{% endif %}" id="confirmar" type="submit" disabled>{% if oper == 'De' %}Remover registro{% else %}Salvar{% endif %}</button>
+        {% endif %}
+        <a class="btn btn-outline-secondary" href="/{{ modulo.slug }}">{% if oper == 'Re' %}Fechar{% else %}Cancelar{% endif %}</a>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

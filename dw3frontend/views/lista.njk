@@ -1,0 +1,29 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+<header class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+  <h1 class="mb-0">{{ modulo.titulo }}</h1>
+  <a class="btn btn-primary" href="/{{ modulo.slug }}/form?oper=Cr">Incluir registro</a>
+</header>
+
+<section class="card pagina-card" aria-label="Registros de {{ modulo.titulo }}">
+  <div class="table-responsive" role="region" aria-label="Tabela de {{ modulo.titulo }}" tabindex="0">
+    <table class="table table-striped align-middle mb-0">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          {% for campo in modulo.campos %}
+            <th scope="col">{{ campo.rotulo }}</th>
+          {% endfor %}
+          <th scope="col">Ações</th>
+        </tr>
+      </thead>
+      <tbody id="registros">
+        <tr>
+          <td colspan="{{ modulo.campos.length + 2 }}">Carregando registros…</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

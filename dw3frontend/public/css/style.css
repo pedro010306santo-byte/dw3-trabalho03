@@ -1,0 +1,111 @@
+body {
+  min-height: 100vh;
+  background: #f2f5ef;
+  color: #203127;
+}
+
+.app-navbar {
+  background: #203e30;
+}
+
+.app-nav {
+  display: flex;
+  gap: .75rem 1.5rem;
+}
+
+.app-nav .navbar-nav {
+  margin-right: auto;
+}
+
+.app-nav .nav-link {
+  padding: .35rem .65rem;
+  border-radius: .35rem;
+  color: #e0eee5;
+}
+
+.app-nav .nav-link:hover,
+.app-nav .nav-link.active {
+  background: #365846;
+  color: #fff;
+}
+
+.login-card {
+  max-width: 28rem;
+  margin-top: clamp(1.5rem, 8vh, 5rem);
+}
+
+.login-sistema {
+  margin-bottom: .5rem;
+  color: #356449;
+  font-weight: 700;
+}
+
+.login-card,
+.pagina-card {
+  border: 1px solid #d7e0d6;
+  border-radius: .75rem;
+  box-shadow: 0 .3rem .8rem #2031270c;
+}
+
+.modulo-link,
+.voltar {
+  color: #24553e;
+  font-weight: 650;
+}
+
+.modulo-link {
+  text-decoration: none;
+}
+
+.modulo-link:hover {
+  background: #e4eee5;
+  text-decoration: underline;
+}
+
+.btn-primary {
+  --bs-btn-bg: #2d6147;
+  --bs-btn-border-color: #2d6147;
+  --bs-btn-hover-bg: #224d38;
+  --bs-btn-hover-border-color: #224d38;
+  --bs-btn-active-bg: #224d38;
+  --bs-btn-active-border-color: #224d38;
+}
+
+.table-responsive {
+  border-radius: inherit;
+}
+
+.table th:last-child {
+  min-width: 13rem;
+}
+
+.atalho {
+  position: absolute;
+  z-index: 1;
+  top: .5rem;
+  left: .5rem;
+  padding: .5rem .75rem;
+  background: #fff;
+  color: #203127;
+  transform: translateY(-150%);
+}
+
+.atalho:focus {
+  transform: translateY(0);
+}
+
+:focus-visible {
+  outline: 3px solid #185d96;
+  outline-offset: 3px;
+}
+
+.app-navbar :focus-visible {
+  outline-color: #fff;
+}
+
+@media (max-width: 575px) {
+  .app-nav .navbar-nav {
+    order: 3;
+    width: 100%;
+  }
+}

@@ -1,0 +1,22 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+<section class="card login-card mx-auto">
+  <div class="card-body p-4 p-md-5">
+    <p class="login-sistema">Pastejo rotacionado</p>
+    <h1 class="h3 mb-4">Entrar no sistema</h1>
+
+    <form id="login-form" method="post">
+      <div class="mb-3">
+        <label class="form-label" for="username">Usuário</label>
+        <input class="form-control" id="username" name="username" type="text" autocomplete="username" required>
+      </div>
+      <div class="mb-4">
+        <label class="form-label" for="password">Senha</label>
+        <input class="form-control" id="password" name="password" type="password" autocomplete="current-password" required>
+      </div>
+      <button class="btn btn-primary w-100" type="submit">Entrar</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

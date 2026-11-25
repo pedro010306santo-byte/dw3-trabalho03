@@ -1,0 +1,8 @@
+services:
+  dw3frontend:
+    build: .
+    ports:
+      - "40100:40100"
+    environment:
+      PORT: "40100"
+      SERVIDOR_DW3: "${SERVIDOR_DW3:-http://localhost:40000}"

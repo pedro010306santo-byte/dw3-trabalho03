@@ -1,0 +1,58 @@
+@servidor = http://localhost:40000
+@username = informe-o-usuario
+@password = informe-a-senha
+
+# Defina o ID do registro retornado na listagem antes de consultar, editar ou remover.
+@id = 1
+
+### Login
+# @name loginAutenticado
+POST {{servidor}}/Login
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}"
+}
+
+### Token da resposta de login
+@accessToken = {{loginAutenticado.response.body.$.token}}
+
+### Verificar proteção da rota (401)
+GET {{servidor}}/getAllPastos
+
+### Inserir
+POST {{servidor}}/insertPasto
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "descricao": "Pasto Norte",
+  "areatotal": 11.5
+}
+
+### Listar
+GET {{servidor}}/getAllPastos
+Authorization: Bearer {{accessToken}}
+
+### Consultar por ID
+GET {{servidor}}/getPastoByID/{{id}}
+Authorization: Bearer {{accessToken}}
+
+### Atualizar
+PUT {{servidor}}/updatePasto/{{id}}
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "descricao": "Pasto Norte ampliado",
+  "areatotal": 12.6
+}
+
+### Remover logicamente
+DELETE {{servidor}}/deletePasto/{{id}}
+Authorization: Bearer {{accessToken}}
+
+### Confirmar que o registro removido não é retornado (registro vazio)
+GET {{servidor}}/getPastoByID/{{id}}
+Authorization: Bearer {{accessToken}}

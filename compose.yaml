@@ -1,0 +1,45 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: dw3
+      POSTGRES_DB: pastejo
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no .env}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./dw3backend/databaseConfig.sql:/docker-entrypoint-initdb.d/01-pastejo.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U dw3 -d pastejo"]
+      interval: 3s
+      timeout: 3s
+      retries: 15
+
+  dw3backend:
+    build: ./dw3backend
+    environment:
+      PORT: 40000
+      PGHOST: postgres
+      PGPORT: 5432
+      PGUSER: dw3
+      PGDATABASE: pastejo
+      PGPASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no .env}
+      JWT_SECRET: ${JWT_SECRET:?Defina JWT_SECRET no .env}
+      FRONTEND_ORIGIN: http://localhost:${DW3_FRONTEND_PORT:-40100}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${DW3_BACKEND_PORT:-40000}:40000"
+
+  dw3frontend:
+    build: ./dw3frontend
+    environment:
+      PORT: 40100
+      SERVIDOR_DW3: http://localhost:${DW3_BACKEND_PORT:-40000}
+    depends_on:
+      - dw3backend
+    ports:
+      - "127.0.0.1:${DW3_FRONTEND_PORT:-40100}:40100"
+
+volumes:
+  postgres-data:

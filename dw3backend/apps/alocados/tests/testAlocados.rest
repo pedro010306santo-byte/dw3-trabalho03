@@ -1,0 +1,66 @@
+@servidor = http://localhost:40000
+@username = informe-o-usuario
+@password = informe-a-senha
+
+# Defina o ID do registro retornado na listagem antes de consultar, editar ou remover.
+@id = 1
+# Use o ID de um registro relacionado cadastrado.
+@animalId = 1
+# Use o ID de um registro relacionado cadastrado.
+@piqueteId = 1
+
+### Login
+# @name loginAutenticado
+POST {{servidor}}/Login
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}"
+}
+
+### Token da resposta de login
+@accessToken = {{loginAutenticado.response.body.$.token}}
+
+### Verificar proteção da rota (401)
+GET {{servidor}}/getAllAlocados
+
+### Inserir
+POST {{servidor}}/insertAlocado
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "animalidifk": {{animalId}},
+  "piqueteidfk": {{piqueteId}},
+  "datainicio": "2026-06-10",
+  "datafinal": "2026-06-15"
+}
+
+### Listar
+GET {{servidor}}/getAllAlocados
+Authorization: Bearer {{accessToken}}
+
+### Consultar por ID
+GET {{servidor}}/getAlocadoByID/{{id}}
+Authorization: Bearer {{accessToken}}
+
+### Atualizar
+PUT {{servidor}}/updateAlocado/{{id}}
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "animalidifk": {{animalId}},
+  "piqueteidfk": {{piqueteId}},
+  "datainicio": "2026-06-11",
+  "datafinal": "2026-06-16"
+}
+
+### Remover logicamente
+DELETE {{servidor}}/deleteAlocado/{{id}}
+Authorization: Bearer {{accessToken}}
+
+### Confirmar que o registro removido não é retornado (registro vazio)
+GET {{servidor}}/getAlocadoByID/{{id}}
+Authorization: Bearer {{accessToken}}

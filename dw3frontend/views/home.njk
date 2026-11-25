@@ -1,0 +1,35 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+<header class="mb-4">
+  <h1>Pastejo rotacionado</h1>
+  <p class="text-body-secondary mb-0">Escolha um cadastro para consultar ou atualizar os registros.</p>
+</header>
+
+<div class="row g-3">
+  {% for item in modulos %}
+    <div class="col-12 col-sm-6">
+      <a class="card pagina-card modulo-link p-4" href="/{{ item.slug }}">{{ item.titulo }}</a>
+    </div>
+  {% endfor %}
+</div>
+
+<section class="mt-5" aria-labelledby="titulo-ocupacao">
+  <h2 class="h4 mb-3" id="titulo-ocupacao">Ocupação atual dos piquetes</h2>
+  <p id="ocupacao-status" role="status">Carregando alocações…</p>
+  <div id="ocupacao-tabela" class="card pagina-card" hidden>
+    <div class="table-responsive" role="region" aria-labelledby="titulo-ocupacao" tabindex="0">
+      <table class="table table-striped align-middle mb-0">
+        <thead>
+          <tr>
+            <th scope="col">Piquete</th>
+            <th scope="col">Animal</th>
+            <th scope="col">Até quando</th>
+          </tr>
+        </thead>
+        <tbody id="ocupacao-registros"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

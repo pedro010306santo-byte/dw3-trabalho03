@@ -1,0 +1,66 @@
+@servidor = http://localhost:40000
+@username = informe-o-usuario
+@password = informe-a-senha
+
+# Defina o ID do registro retornado na listagem antes de consultar, editar ou remover.
+@id = 1
+# Use o ID de um registro relacionado cadastrado.
+@pastoId = 1
+
+### Login
+# @name loginAutenticado
+POST {{servidor}}/Login
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}"
+}
+
+### Token da resposta de login
+@accessToken = {{loginAutenticado.response.body.$.token}}
+
+### Verificar proteção da rota (401)
+GET {{servidor}}/getAllPiquetes
+
+### Inserir
+POST {{servidor}}/insertPiquete
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "descricao": "Piquete A",
+  "latitude": -21.28,
+  "longitude": -50.33,
+  "pastoidfk": {{pastoId}},
+  "areausada": 2.5
+}
+
+### Listar
+GET {{servidor}}/getAllPiquetes
+Authorization: Bearer {{accessToken}}
+
+### Consultar por ID
+GET {{servidor}}/getPiqueteByID/{{id}}
+Authorization: Bearer {{accessToken}}
+
+### Atualizar
+PUT {{servidor}}/updatePiquete/{{id}}
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "descricao": "Piquete A ampliado",
+  "latitude": -21.28,
+  "longitude": -50.31,
+  "pastoidfk": {{pastoId}},
+  "areausada": 3.25
+}
+
+### Remover logicamente
+DELETE {{servidor}}/deletePiquete/{{id}}
+Authorization: Bearer {{accessToken}}
+
+### Confirmar que o registro removido não é retornado (registro vazio)
+GET {{servidor}}/getPiqueteByID/{{id}}
+Authorization: Bearer {{accessToken}}
